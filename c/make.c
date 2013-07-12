@@ -585,7 +585,7 @@ int main(int argc, char **argv) {
 
     {   /* Options parsing */
         int opt;
-        while ((opt = getopt(argc, argv, "b:Ceo:f:u:U:vVzZ")) != -1) {
+        while ((opt = getopt(argc, argv, "b:Ceo:f:s:u:U:vVzZ")) != -1) {
             switch (opt) {
             case 'e':
                 do_exact = 1;
@@ -637,31 +637,29 @@ int main(int argc, char **argv) {
             case 'Z':
                 no_look_inside = 1;
                 break;
-            }
-        }
-
-        /* Open data to create .zsync for - either it's a supplied filename, or stdin */
-        if (optind == argc - 1) {
-            infname = strdup(argv[optind]);
-            instream = fopen(infname, "rb");
-            if (!instream) {
-                perror("open");
-                exit(2);
-            }
-
-            {   /* Get mtime if available */
-                struct stat st;
-                if (fstat(fileno(instream), &st) == 0) {
-                    mtime = st.st_mtime;
+            case 's':
+        /* Open data to create .zsync its supplied filename */
+                infname = strdup(optarg);
+                instream = fopen(infname, "rb");
+                if (!instream) {
+                  perror("open");
+                  exit(2);
                 }
+                {
+                  struct stat st;
+                  if (fstat(fileno(instream), &st) == 0) {
+                      mtime = st.st_mtime;
+                  }
+                }
+                if (!fname)
+                fname = basename(optarg);
+                break;
             }
-
-            /* Use supplied filename as the target filename */
-            if (!fname)
-                fname = basename(argv[optind]);
         }
-        else {
-            instream = stdin;
+
+        if (!instream) {
+          printf("ERR: -s infile required\n");
+          exit(2);
         }
     }
 
