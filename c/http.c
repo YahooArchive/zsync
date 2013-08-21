@@ -64,6 +64,9 @@ char *want_interface = NULL;
 char *sslcert = NULL;
 char *sslkey = NULL;
 
+/* Should we tell curl to resolve a host to a particular ip? */
+char *resolve_host = NULL;
+
 /* Should we tell curl to ignore SSL peer verification? */
 int be_insecure = 0;
 
@@ -161,6 +164,21 @@ CURL *make_curl_handle() {
         if( res != CURLE_OK ) {
             /* Warn and continue. Let's try anyway even if this setopt fails */
             fprintf(stderr, "--interface: %s\n", curl_easy_strerror(res));
+        }
+    }
+   
+    /* Requires CURL ver 7.21.3 or newer. */
+    /* Equiv of --resolve in curl */
+    if(resolve_host) {
+        /* -H */
+        struct curl_slist *host = NULL;
+        host = curl_slist_append(NULL, resolve_host);
+        res = curl_easy_setopt( curl, CURLOPT_RESOLVE, host );
+        if( res != CURLE_OK ) {
+            /* Warn and continue. Let's try anyway even if this setopt fails */
+            fprintf(stderr, "--resolve: %s\n", curl_easy_strerror(res));
+            curl_easy_cleanup(curl);
+            return NULL;
         }
     }
 

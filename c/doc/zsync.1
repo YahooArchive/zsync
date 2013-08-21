@@ -61,6 +61,10 @@ Use the specified client-side certificate file when making https connections.
 \fB\-S\fR \fIsslkey\fP
 Use the specified client-side private key file when making https connections.
 .TP
+\fB\-H\fR \fIhost:port:ip\fP
+Use the curl --resolve option to map a hostname to a different IP instead of doing a dns lookup.
+Example curl usage: curl --resolve foo.example.com:443:127.0.0.1 https://foo.example.com:443/
+.TP
 \fB\-I\fR \fIinterface\fP
 Attempt to use this interface name, IP address or hostname as the source of http connections.
 .TP

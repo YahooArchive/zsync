@@ -434,7 +434,7 @@ int main(int argc, char **argv) {
     srand(getpid());
     {   /* Option parsing */
         int opt;
-        while ((opt = getopt(argc, argv, "A:k:o:i:Vsqvu:C:KT:I:R:S:")) != -1) {
+        while ((opt = getopt(argc, argv, "A:k:o:i:Vsqvu:C:KT:I:R:S:H:")) != -1) {
             switch (opt) {
             case 'A':           /* Authentication options for remote server */
                 {               /* Scan string as hostname=username:password */
@@ -518,6 +518,10 @@ int main(int argc, char **argv) {
             case 'I':
                 /* Interface */
                 want_interface = strdup(optarg);
+                break;
+            case 'H':
+                /* Resolve Host */
+                resolve_host = strdup(optarg);
                 break;
             }
         }
@@ -731,6 +735,7 @@ int main(int argc, char **argv) {
         printf("used %lld local, fetched %lld\n", local_used, http_down);
     free(cacert);
     free(want_interface);
+    free(resolve_host);
     free(referer);
     free(temp_file);
     curl_global_cleanup();

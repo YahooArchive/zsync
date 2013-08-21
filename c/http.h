@@ -21,6 +21,7 @@ extern char *referer;
 
 extern char *cacert;
 extern char *want_interface;
+extern char *resolve_host;
 extern char *sslcert;
 extern char *sslkey;
 extern int be_insecure;
